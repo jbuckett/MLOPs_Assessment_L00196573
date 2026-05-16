@@ -4,8 +4,8 @@ name: Continuous Training (CT) Pipeline
 on:
   push:
     paths:
-      - 'train.py'
-      - '*.csv'
+      - 'app/train.py'
+      - 'app/*.csv'
   workflow_dispatch:
 
 jobs:
@@ -30,6 +30,7 @@ jobs:
       env:
         MLFLOW_TRACKING_URI: file:./mlruns
       run: |
+	cd app
         python train.py
 
     # this step checks if a new model.pkl was generated and pushes it back to GitHub
@@ -38,8 +39,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # use -f (force) to bypass .gitignore, and check both possible folder locations
-        git add -f model.pkl || true
+        # use -f (force) to bypass .gitignore
         git add -f app/model.pkl || true
         
         # only commit if the model actually changed
