@@ -52,13 +52,20 @@ with mlflow.start_run():
     # log the model to MLflow
     result = mlflow.sklearn.log_model(model, "model")
 
-    # register the model
-    mlflow.register_model(
-        model_uri=result.model_uri,
-        name="life-expectancy-model"
-    )
+# log the model to MLflow
+    result = mlflow.sklearn.log_model(model, "model")
+ 
+    # only register the model if not  running inside GitHub Actions
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        print("Running locally: Registering model in MLflow Registry...")
+        mlflow.register_model(
+            model_uri=result.model_uri,
+            name="life-expectancy-model"
+        )
+    else:
+        print("Running in CI/CD: Skipping Model Registry (File-store backend active).")
 
-    # save the model to a file the  flask app can use it
+    # save the model to a file so our Flask app can use it later
     with open("model.pkl", "wb") as file:
         pickle.dump(model, file)
 
