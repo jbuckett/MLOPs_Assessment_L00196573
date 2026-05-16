@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: life-expectancy-deployment
+  labels:
+    app: life-expectancy
+spec:
+  replicas: 2 # Spins up two identical copies of my  app for resilience
+  selector:
+    matchLabels:
+      app: life-expectancy
+  template:
+    metadata:
+      labels:
+        app: life-expectancy
+    spec:
+      containers:
+      - name: web-app
+        image: buckett01/life-expectancy-app:latest # Pulls directly from my docker hub
+        imagePullPolicy: Always # Forces K8s to grab the absolute newest build every time
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: life-expectancy-service
+spec:
+  selector:
+    app: life-expectancy
+  ports:
+    - protocol: TCP
+      port: 5000       # The port the service exposes
+      targetPort: 5000 # The port your Flask app listens on inside the container
+  type: ClusterIP
