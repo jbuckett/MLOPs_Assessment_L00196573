@@ -5,9 +5,13 @@ import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error
+import os
 
-# Set up MLflow tracking
-mlflow.set_tracking_uri("http://127.0.0.1:5555")
+# If running in GitHub Actions, use a local folder backup otherwise use VM server
+if os.environ.get("GITHUB_ACTIONS") == "true":
+    mlflow.set_tracking_uri("file:./mlruns")
+else:
+    mlflow.set_tracking_uri("http://127.0.0.1:5555")
 
 # load the life expectancy dataset
 df = pd.read_csv("Life Expectancy Data.csv")
