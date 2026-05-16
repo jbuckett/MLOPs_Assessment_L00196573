@@ -7,6 +7,10 @@ on:
       - 'app/*.csv'
   workflow_dispatch:
 
+# Give the GitHub Actions token explicit permission to commit files back to the repo
+permissions:
+  contents: write
+
 jobs:
   train-model:
     runs-on: ubuntu-latest
