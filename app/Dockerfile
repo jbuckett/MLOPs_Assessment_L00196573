@@ -8,8 +8,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 # copy all my python files, the life expectancy csv, and the templates into the container
 COPY . .
-# run the training script to build the model before the container starts
-RUN python train.py
+# The training step (RUN python train.py) has been removed for CI/CD deployment.
+# The container will now serve the model.pkl file that is already saved in the repository.
 # open up port 5000 so we can access the web page
 EXPOSE 5000
 # when the container starts up, run the flask app
