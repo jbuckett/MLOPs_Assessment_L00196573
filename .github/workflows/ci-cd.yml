@@ -1,0 +1,37 @@
+name: MLOps CI/CD Pipeline
+
+# Trigger the pipeline every time code is pushed to the 'dev' branch
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: download the code from the repository onto the runner VM
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # Step 2: set up a secure connection to my docker hub account using my secrets
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    # Step 3: set up docker buildx
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # Step 4: build the container and push it to docker hub
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./app
+        file: ./app/Dockerfile
+        push: true
+        # tags my image as latest under my docker hub repository
+        tags: buckett01/life-expectancy-app:latest
