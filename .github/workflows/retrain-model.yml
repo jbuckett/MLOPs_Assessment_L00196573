@@ -1,6 +1,5 @@
 name: Continuous Training (CT) Pipeline
 
-# this triggers the pipeline manually or automatically if train.py or my dataset changes
 on:
   push:
     paths:
@@ -25,22 +24,16 @@ jobs:
       run: |
         pip install --no-cache-dir -r app/requirements.txt
 
-    # run the training script, but set a local MLflow URI so it doesn't crash trying to find my vm
     - name: Run Data Ingestion, Preprocessing, and Training
       env:
         MLFLOW_TRACKING_URI: file:./mlruns
       run: |
-	cd app
+        cd app
         python train.py
 
-    # this step checks if a new model.pkl was generated and pushes it back to GitHub
     - name: Commit and Push new Model Artifact
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # use -f (force) to bypass .gitignore
         git add -f app/model.pkl || true
-        
-        # only commit if the model actually changed
         git diff --quiet && git diff --staged --quiet || (git commit -m "Automated model retraining artifact" && git push)
