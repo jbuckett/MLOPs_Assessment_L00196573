@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Life Expectancy Predictor</title>
+</head>
+<body>
+    <h2>WHO Life Expectancy Predictor</h2>
+    <form action="/predict" method="POST">
+        <label>Years of Schooling (e.g., 10.5):</label><br>
+        <input type="text" name="schooling" required><br><br>
+
+        <label>Country Status:</label><br>
+        <select name="status">
+            <option value="Developing">Developing</option>
+            <option value="Developed">Developed</option>
+        </select><br><br>
+
+        <input type="submit" value="Predict Life Expectancy">
+    </form>
+</body>
+</html>
