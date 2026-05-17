@@ -1,10 +1,10 @@
 name: MLOps CI/CD Pipeline
 
-# Trigger the pipeline every time code is pushed to the 'dev' branch
+# Trigger the pipeline every time code is merged or pushed to the main branch
 on:
   push:
     branches:
-      - dev
+      - main
   workflow_dispatch:
 
 jobs:
